@@ -1,0 +1,8 @@
+.idea/
+node_modules/
+/build/
+/debug/
+/public/
+/webpackbuild/
+npm-debug.log
+public-temp/
