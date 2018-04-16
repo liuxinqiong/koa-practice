@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node start.js",
+    "dev": "nodemon start.js",
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
@@ -14,9 +14,16 @@
     "koa": "^2.5.0",
     "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.4.0",
-    "nunjucks": "^3.1.2"
+    "mime": "^2.3.1",
+    "mysql2": "^1.5.3",
+    "mz": "^2.7.0",
+    "node-uuid": "^1.4.8",
+    "nunjucks": "^3.1.2",
+    "sequelize": "^4.37.6"
   },
   "devDependencies": {
-    "nodemon": "^1.17.3"
+    "mocha": "^5.1.0",
+    "nodemon": "^1.17.3",
+    "supertest": "^3.0.0"
   }
 }

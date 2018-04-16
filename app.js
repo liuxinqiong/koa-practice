@@ -2,39 +2,31 @@ const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const controller = require('./controller');
 const nunjucks = require('nunjucks');
-
-function createEnv(path, opts) {
-    var
-        autoescape = opts.autoescape === undefined ? true : opts.autoescape,
-        noCache = opts.noCache || false,
-        watch = opts.watch || false,
-        throwOnUndefined = opts.throwOnUndefined || false,
-        env = new nunjucks.Environment(
-            new nunjucks.FileSystemLoader('views', {
-                noCache: noCache,
-                watch: watch,
-            }), {
-                autoescape: autoescape,
-                throwOnUndefined: throwOnUndefined
-            });
-    if (opts.filters) {
-        for (var f in opts.filters) {
-            env.addFilter(f, opts.filters[f]);
-        }
-    }
-    return env;
-}
-
-var env = createEnv('views', {
-    watch: true,
-    filters: {
-        hex: function (n) {
-            return '0x' + n.toString(16);
-        }
-    }
-});
+const staticFiles = require('./static-files');
+const isProduction = process.env.NODE_ENV === 'production';
+const templating = require('./templating')
 
 const app = new Koa();
+
+app.use(templating('views', {
+    noCache: !isProduction,
+    watch: !isProduction
+}));
+
+app.use(async (ctx, next) => {
+    console.log(`Process ${ctx.request.method} ${ctx.request.url}...`);
+    var
+        start = new Date().getTime(),
+        execTime;
+    await next();
+    execTime = new Date().getTime() - start;
+    ctx.response.set('X-Response-Time', `${execTime}ms`);
+});
+
+if (!isProduction) {
+    let staticFiles = require('./static-files');
+    app.use(staticFiles('/static/', __dirname + '/static'));
+}
 
 app.use(bodyParser());
 
@@ -53,4 +45,4 @@ app.use(async (ctx, next) => {
 
 app.use(controller());
 
-app.listen(3000);
+module.exports = app;
