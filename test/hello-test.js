@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const sum = require('../hello');
+const sum = require('./hello');
 
 describe('#hello.js', () => {
 

@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-const hello = require('../async-hello');
+const hello = require('./async-hello');
 
 describe('#async-.js', () => {
     it('#async function', async () => {

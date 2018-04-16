@@ -2,9 +2,10 @@ const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const controller = require('./controller');
 const nunjucks = require('nunjucks');
-const staticFiles = require('./static-files');
+const staticFiles = require('./middlewares/static-files');
 const isProduction = process.env.NODE_ENV === 'production';
-const templating = require('./templating')
+const templating = require('./middlewares/templating')
+const rest = require('./middlewares/rest');
 
 const app = new Koa();
 
@@ -12,6 +13,8 @@ app.use(templating('views', {
     noCache: !isProduction,
     watch: !isProduction
 }));
+
+app.use(rest.restify('/api/'))
 
 app.use(async (ctx, next) => {
     console.log(`Process ${ctx.request.method} ${ctx.request.url}...`);
